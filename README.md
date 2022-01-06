@@ -23,6 +23,7 @@ HTTP Response Monitoring
 <br><br>
 > ### 동작 방식은 다음과 같다.
 >> #### 1. Telgraf Metric 수집 다음 Plugin을 추가해준다.
+  >>> [Telegraf HTTP Plugin info](https://github.com/influxdata/telegraf/tree/release-1.21/plugins/inputs/http)
   >>> <pre>
   >>> <code>
   >>> [[inputs.http_response]]
