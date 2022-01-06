@@ -37,8 +37,23 @@ HTTP Response Monitoring
   >>> HTTP 요청방법
   >>></code>
   >>></pre>
->>#### 2. InfluxDB Data 전송
+>>#### 2. InfluxDB Data Transfer
 >>#### 3. Grafana Query
 
+>>> <pre>
+>>> <code>
+>>> 아래와 같은 Query를 추가해준다. (Grafana Query .txt 참고)
+>>> from(bucket: "HTTP")
+>>>  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+>>>  |> filter(fn: (r) => r["_measurement"] == "http_response")
+>>>  |> filter(fn: (r) => r["_field"] == "http_response_code")
+>>>  |> filter(fn: (r) => r["server"] == "https://aws.amazon.com/ko/console/" or r["server"] == "https://github.com/" or r["server"] == "https://hub.docker.com/" or r["server"] == "https://naver.com/" or r["server"] == "https://react.hxecorp.com/" or r["server"] == "https://www.google.com/" or r["server"] == "https://www.kakaocorp.com/" or r["server"] == "https://www.netflix.com/kr/")
+>>> # 위 URL을 교체해준다. 
+>>> # InfluxDB Explore에서 자신의 값을 선택한 뒤, 작업하면 편하다.
+>>>  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+>>>  |> yield(name: "mean")
+>>> </code>
+>>> </pre>
 
-
+>>#### 4. Grafana Dashboard
+>>> Grafana 'json' Templete 참고
