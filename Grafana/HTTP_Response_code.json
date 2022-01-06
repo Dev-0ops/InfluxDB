@@ -1,0 +1,193 @@
+{
+  "id": 2,
+  "gridPos": {
+    "h": 6,
+    "w": 3,
+    "x": 0,
+    "y": 0
+  },
+  "type": "stat",
+  "title": "https://react.hxecorp.com/",
+  "repeat": "url_name",
+  "repeatDirection": "h",
+  "maxPerRow": 12,
+  "datasource": {
+    "type": "influxdb",
+    "uid": "x4naLwA7z"
+  },
+  "pluginVersion": "8.3.3",
+  "description": "Monitoring of the HTTP Response. On the Title of the widget you can find the Website name, and on the value the current response of the HTTP or HTTPS.\n\nThresholds are:\n* Results with 20x , Green\n* Results with 30x , Orange\n* Results with 40x , Red\n* Results with 50x , Blue",
+  "links": [],
+  "fieldConfig": {
+    "defaults": {
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "semi-dark-green",
+            "value": null
+          },
+          {
+            "color": "yellow",
+            "value": 300
+          },
+          {
+            "color": "orange",
+            "value": 400
+          },
+          {
+            "color": "red",
+            "value": 500
+          }
+        ]
+      },
+      "mappings": [
+        {
+          "options": {
+            "200": {
+              "index": 25,
+              "text": "OK"
+            },
+            "201": {
+              "index": 24,
+              "text": "Created"
+            },
+            "202": {
+              "index": 23,
+              "text": "Accepted"
+            },
+            "203": {
+              "index": 22,
+              "text": "Non-Authoritative Information"
+            },
+            "204": {
+              "index": 21,
+              "text": "No Content"
+            },
+            "205": {
+              "index": 20,
+              "text": "Reset Content"
+            },
+            "206": {
+              "index": 19,
+              "text": "Partial Content"
+            },
+            "207": {
+              "index": 18,
+              "text": "Multi-Status"
+            },
+            "208": {
+              "index": 17,
+              "text": "Already Reported"
+            },
+            "209": {
+              "index": 16,
+              "text": "IM Used"
+            },
+            "300": {
+              "index": 15,
+              "text": "Multiple Choices"
+            },
+            "301": {
+              "index": 14,
+              "text": "Moved Permanently"
+            },
+            "302": {
+              "index": 13,
+              "text": "Moved temporarily"
+            },
+            "308": {
+              "index": 12,
+              "text": "Permanent Redirect"
+            },
+            "400": {
+              "index": 11,
+              "text": "Bad Request"
+            },
+            "401": {
+              "index": 10,
+              "text": "Unauthorized "
+            },
+            "402": {
+              "index": 9,
+              "text": "Payment Required"
+            },
+            "403": {
+              "index": 8,
+              "text": "Forbidden"
+            },
+            "404": {
+              "index": 7,
+              "text": "Not Found"
+            },
+            "405": {
+              "index": 6,
+              "text": "Method Not Allowed"
+            },
+            "406": {
+              "index": 5,
+              "text": "Not Acceptable"
+            },
+            "407": {
+              "index": 4,
+              "text": "Proxy Authentication Required"
+            },
+            "408": {
+              "index": 3,
+              "text": "Request Timeout"
+            },
+            "409": {
+              "index": 2,
+              "text": "Conflict"
+            },
+            "410": {
+              "index": 1,
+              "text": "Gone"
+            },
+            "500": {
+              "color": "text",
+              "index": 0,
+              "text": "Internal Server Error"
+            },
+            "502": {
+              "index": 26,
+              "text": "Bad Gateway"
+            }
+          },
+          "type": "value"
+        }
+      ],
+      "decimals": 0,
+      "max": 0,
+      "min": 0,
+      "unit": "short"
+    },
+    "overrides": []
+  },
+  "options": {
+    "reduceOptions": {
+      "values": false,
+      "calcs": [
+        "lastNotNull"
+      ],
+      "fields": "",
+      "limit": 1
+    },
+    "orientation": "auto",
+    "textMode": "value",
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "text": {}
+  },
+  "targets": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "x4naLwA7z"
+      },
+      "query": "from(bucket: \"HTTP\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_response\")\n  |> filter(fn: (r) => r[\"_field\"] == \"http_response_code\")\n  |> filter(fn: (r) => r[\"server\"] == \"https://react.hxecorp.com/\")\n  |> group(columns: [\"server\"])\n  |> aggregateWindow(every: 10s, fn: last, createEmpty: false)\n  |> yield(name: \"last\")",
+      "refId": "A"
+    }
+  ]
+}

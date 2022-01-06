@@ -1,0 +1,93 @@
+{
+  "id": 55,
+  "gridPos": {
+    "h": 12,
+    "w": 24,
+    "x": 0,
+    "y": 21
+  },
+  "type": "timeseries",
+  "title": "HTTP Response Time",
+  "transformations": [],
+  "datasource": {
+    "type": "influxdb",
+    "uid": "x4naLwA7z"
+  },
+  "fieldConfig": {
+    "defaults": {
+      "custom": {
+        "drawStyle": "line",
+        "lineInterpolation": "smooth",
+        "barAlignment": 0,
+        "lineWidth": 1,
+        "fillOpacity": 4,
+        "gradientMode": "hue",
+        "spanNulls": false,
+        "showPoints": "auto",
+        "pointSize": 2,
+        "stacking": {
+          "mode": "none",
+          "group": "A"
+        },
+        "axisPlacement": "auto",
+        "axisLabel": "Reponse Time",
+        "scaleDistribution": {
+          "type": "linear"
+        },
+        "hideFrom": {
+          "tooltip": false,
+          "viz": false,
+          "legend": false
+        },
+        "thresholdsStyle": {
+          "mode": "off"
+        },
+        "axisGridShow": true,
+        "lineStyle": {
+          "fill": "solid"
+        }
+      },
+      "color": {
+        "mode": "palette-classic"
+      },
+      "thresholds": {
+        "mode": "absolute",
+        "steps": [
+          {
+            "color": "green",
+            "value": null
+          }
+        ]
+      },
+      "mappings": [],
+      "displayName": "${__field.labels.server}",
+      "unit": "none"
+    },
+    "overrides": []
+  },
+  "options": {
+    "tooltip": {
+      "mode": "single"
+    },
+    "legend": {
+      "displayMode": "table",
+      "placement": "bottom",
+      "calcs": [
+        "lastNotNull",
+        "min",
+        "max",
+        "sum"
+      ]
+    }
+  },
+  "targets": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "x4naLwA7z"
+      },
+      "query": "from(bucket: \"HTTP\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_response\")\n  |> filter(fn: (r) => r[\"_field\"] == \"response_time\")\n  |> filter(fn: (r) => r[\"server\"] == \"https://aws.amazon.com/ko/console/\" or r[\"server\"] == \"https://github.com/\" or r[\"server\"] == \"https://hub.docker.com/\" or r[\"server\"] == \"https://naver.com/\" or r[\"server\"] == \"https://react.hxecorp.com/\" or r[\"server\"] == \"https://www.google.com/\" or r[\"server\"] == \"https://www.kakaocorp.com/\" or r[\"server\"] == \"https://www.netflix.com/kr/\")\n  |> group(columns: [\"server\"])\n  |> aggregateWindow(every: 10s, fn: last, createEmpty: false)\n  |> yield(name: \"last\")\n\n",
+      "refId": "\bA"
+    }
+  ]
+}
