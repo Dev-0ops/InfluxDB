@@ -22,22 +22,23 @@ HTTP Response Monitoring
 * HTTP_Response_Code URL : [https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C](https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C)    
 <br><br>
 > ### 동작 방식은 다음과 같다.
->> #### 1. Telgraf Metric 수집
+>> #### 1. Telgraf Metric 수집 다음 Plugin을 추가해준다.
   >>> <pre>
   >>> <code>
-  >>> public class BootSpringBootApplication {
-  >>> public static void main(String[] args) {
-  >>>   System.out.println("Hello, Honeymon");
-  >>> }
-  >>>}
+  >>> [[inputs.http_response]]
+  >>>
+  >>> urls = ["http://example.com]
+  >>> HTTP Response Code를 응답받을 URL을 넣어준다.
+  >>> 
+  >>> HTTP Response의 응답 대기 시간
+  >>> response_timeout = "5s" 
+  >>>
+  >>> method = "GET"
+  >>> HTTP 요청방법
   >>></code>
   >>></pre>
 >>#### 2. InfluxDB Data 전송
 >>#### 3. Grafana Query
-
-
-
-
 
 
 
